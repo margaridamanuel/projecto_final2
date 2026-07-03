@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: api_travel
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+    networks:
+      - app-network
+      - auth_network
+
+  #kc:
+  #  container_name: kc1
+  #  image: quay.io/keycloak/keycloak:21.1.1
+  #  environment:
+  #    KEYCLOAK_ADMIN: admin
+  #    KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+  #  command: start-dev
+  #  ports:
+  #    - "8080:8080"
+  #  networks:
+  #    - app-network
+  #  depends_on:
+  #    - postgres
+
+  #postgres:
+  #  container_name: postgres1
+  #  image: postgres:14.1
+  #  environment:
+  #    POSTGRES_USER: admin
+  #    POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #  volumes:
+  #    - postgres_data:/var/lib/postgresql/data
+  #  ports:
+  #    - "5432:5432"
+  #  networks:
+  #    - app-network
+
+  mysqldb:
+    image: mysql:8.0.21
+    container_name: TravelAngolaDB
+    platform: linux/amd64
+    env_file:
+      - ./.env
+    ports:
+      - 3307:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+      - auth_network
+
+networks:
+  app-network:
+    driver: bridge
+  auth_network:
+    external: true
+
+volumes:
+  postgres_data: {}
+  mysql_data: {}
