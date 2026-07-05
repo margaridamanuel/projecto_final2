@@ -1,0 +1,128 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  CLIENTE
+  PROPRIETARIO
+}
+
+enum StatusAlojamento {
+  PENDENTE
+  APROVADO
+  REJEITADO
+}
+
+enum StatusReserva {
+  PENDENTE
+  CONFIRMADA
+  CANCELADA
+}
+
+enum TipoAlojamento {
+  HOTEL
+  RESORT
+  PENSAO
+  APARTAMENTO
+}
+
+enum CategoriaDestino {
+  PRAIA
+  CULTURA
+  NATUREZA
+  URBANO
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  nome       String
+  email      String     @unique
+  password   String
+  keycloakId String   @unique
+  role       Role       @default(CLIENTE)
+  createdAt  DateTime   @default(now())
+
+  reservas   Reserva[]
+  alojamentos Alojamento[]
+  
+}
+
+model Destino {
+  id            Int            @id @default(autoincrement())
+  nome          String
+  provincia     String
+  descricao     String?
+
+  alojamentos   Alojamento[]
+}
+
+
+
+
+model Alojamento {
+  id          Int    @id @default(autoincrement())
+
+  nome        String
+  descricao   String
+  tipo        TipoAlojamento
+
+  quartos     Int
+  preco       Decimal @db.Decimal(10,2)
+
+  provincia   String
+  municipio   String
+  endereco    String
+
+  servicos    String
+  estrelas    Int @default(0)
+
+  imagem      String
+
+  status      StatusAlojamento @default(PENDENTE)
+
+  proprietarioId Int
+  proprietario   User @relation(fields: [proprietarioId], references: [id])
+
+  destinoId Int?
+  destino   Destino? @relation(fields: [destinoId], references: [id])
+
+  imagens   Imagem[]
+  reservas  Reserva[]
+
+  createdAt DateTime @default(now())
+}
+
+model Imagem {
+  id          Int @id @default(autoincrement())
+  url         String
+
+  alojamentoId Int
+  alojamento   Alojamento @relation(fields: [alojamentoId], references: [id], onDelete: Cascade)
+}
+
+model Reserva {
+  id          Int @id @default(autoincrement())
+
+  checkIn     DateTime
+  checkOut    DateTime
+
+  total       Decimal @db.Decimal(10,2)
+
+  status      StatusReserva @default(PENDENTE)
+
+  userId      Int
+  user        User @relation(fields: [userId], references: [id])
+
+  alojamentoId Int
+  alojamento   Alojamento @relation(fields: [alojamentoId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
