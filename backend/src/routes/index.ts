@@ -3,12 +3,12 @@ import destinoRouter from "./destinosRoutes";
 import alojamentosRouter from "./alojamentosRouter";
 import authRouter from "./auth.routes";
 import reservaRouter from "./reservaRoutes";
-import UtilizadorController from "./utilizadorRoutes";
+import utilizadorRouter from "./utilizadorRoutes";
 const routesRoot = Router();
 
 routesRoot.use(destinoRouter);
 routesRoot.use(alojamentosRouter);
 routesRoot.use(reservaRouter);
 routesRoot.use(authRouter);
-routesRoot.use(UtilizadorController);
+routesRoot.use(utilizadorRouter);
 export default routesRoot;

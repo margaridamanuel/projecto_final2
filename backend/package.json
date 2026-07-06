@@ -6,8 +6,7 @@
     "dev": "ts-node-dev --transpile-only ./src/server.ts",
     "start": "node src/server.js",
     "build": "tsc",
-    "lint": "tslint -c tslint.json src/**/*.ts",
-    "prepublish": "npm run build"
+    "lint": "tslint -c tslint.json src/**/*.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +21,7 @@
   },
   "devDependencies": {
     "@keycloak/keycloak-admin-client": "^26.6.4",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.0.0",
     "axios": "^1.18.1",

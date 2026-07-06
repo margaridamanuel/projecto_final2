@@ -122,7 +122,7 @@ function Home() {
           </div>
         </div>
       </section>
-      <section className="p-16 bg-gray-50">
+      {/* <section className="p-16 bg-gray-50">
         <h2 className="text-4xl font-bold text-center mb-10">
           O que dizem os viajantes
         </h2>
@@ -136,7 +136,7 @@ function Home() {
           ))}
         </div>
       </section>
-      <section className="relative h-[350px] overflow-hidden">
+      {/*<section className="relative h-[350px] overflow-hidden">
         <div className="max-w-5xl mx-auto relative h-[350px] overflow-x-hidden rounded-2xl">
           <Swiper
             modules={[Autoplay, Pagination]}
@@ -160,10 +160,10 @@ function Home() {
           </Swiper>
         </div>
 
-        {/* Fundo escurecido */}
+         Fundo escurecido 
         <div className="absolute inset-0 bg-withe"></div>
 
-        {/* Texto */}
+        {/* Texto 
         <div className="absolute inset-0 flex flex-col justify-center items-center text-center text-white px-6">
           <h2 className="text-4xl font-bold mb-4">
             Pronto para a tua próxima aventura?
@@ -180,7 +180,7 @@ function Home() {
             Começar agora
           </button>
         </div>
-      </section>
+      </section> */}
       <Footer />
     </div>
   );

@@ -1,9 +1,15 @@
-import express from "express";
+import { Router } from "express";
 import { UtilizadorController } from "../controllers/UtilizadorController";
 
-const router = express.Router();
+const utilizadorRouter = Router();
 const controller = new UtilizadorController();
 
-router.post("/utilizadores", controller.criarUtilizador.bind(controller));
+utilizadorRouter.post("/utilizadores", (req, res) =>
+  controller.criarUtilizador(req, res),
+);
+utilizadorRouter.get(
+  "/utilizadores",
+  controller.obterUtilizador.bind(controller),
+);
 
-export default router;
+export default utilizadorRouter;

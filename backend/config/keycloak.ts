@@ -17,7 +17,7 @@ const kcClient = async () => {
 
 const kcAdminClient = async () => {
   const kcAdminClientIni = new KcAdminClient({
-    baseUrl: process.env.KEYCLOAK_BASE_URL,
+    baseUrl: process.env.KEYCLOAK_URL,
     realmName: process.env.KEYCLOAK_REALM,
   });
 
@@ -26,8 +26,8 @@ const kcAdminClient = async () => {
       username: `${process.env.KEYCLOAK_USER_NAME}`,
       password: `${process.env.KEYCLOAK_USER_PASS}`,
       grantType: "password",
-      clientId: `${process.env.CLIENT_ID}`,
-      clientSecret: `${process.env.CLIENT_SECRET}`,
+      clientId: `${process.env.KEYCLOAK_CLIENT_ID}`,
+      clientSecret: `${process.env.KEYCLOAK_CLIENT_SECRET}`,
     });
   }
 
