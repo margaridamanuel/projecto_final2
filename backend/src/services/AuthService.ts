@@ -29,8 +29,18 @@ export default class AuthService {
     } catch (e: any) {
       return {
         status: false,
-        message: e,
+        message:
+          e?.response?.data?.error_description ||
+          e?.message ||
+          "Erro ao autenticar",
       };
     }
+  }
+
+  static async createUSer(data: any) {
+    const kcAdmin = await kcAdminClient();
+    const result = await kcAdmin.users.create(data);
+    if (result === undefined) return { status: false, data: [] };
+    return { status: true, data: result.id };
   }
 }
