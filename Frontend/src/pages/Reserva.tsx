@@ -1,7 +1,9 @@
 import NavBar from "../components/NavBar";
 import { useParams } from "react-router-dom";
-import { quartos } from "../data/quartos";
+import { useLocation } from "react-router-dom";
+//import { quartos } from "../data/quartos";
 export default function Reserva() {
+  const location = useLocation();
   return (
     <div className="bg-gray-100 min-h-screen py-10">
       <div className=" max-w-7xl mx-auto grid lg:grid-cols-3 gap-8 px-6">

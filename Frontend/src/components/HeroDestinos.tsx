@@ -10,7 +10,7 @@ export default function HeroDestinos({ onSearch }: HeroDestinosProps) {
   return (
     <section
       className="
-      h-[400px]
+      h-[350px]
       bg-blue-950
       text-white
       flex

@@ -8,9 +8,14 @@ import { useNavigate } from "react-router-dom";
 
 import "swiper/css";
 import "swiper/css/pagination";
+import { useState } from "react";
 
 function Home() {
   const navigate = useNavigate();
+
+  const verMais = () => {
+    navigate("/destinos");
+  };
   const destinations = [
     {
       title: "Quedas de Kalandula",
@@ -34,6 +39,26 @@ function Home() {
     },
   ];
 
+  const hoteis = [
+    {
+      id: 1,
+      nome: "Epic Sana",
+      localizacao: "Luanda",
+      imagem: "https://images.unsplash.com/photo-1566073771259-6a8506099945",
+    },
+    {
+      id: 2,
+      nome: "Hotel Presidente",
+      localizacao: "Luanda",
+      imagem: "https://images.unsplash.com/photo-1571896349842-33c89424de2d",
+    },
+    {
+      id: 3,
+      nome: "Cabo Ledo Resort",
+      localizacao: "Cabo Ledo",
+      imagem: "https://images.unsplash.com/photo-1501117716987-c8e1ecb210f5",
+    },
+  ];
   const testimonials = [
     {
       name: "Ana Silva",
@@ -51,10 +76,21 @@ function Home() {
     "https://images.unsplash.com/photo-1469474968028-56623f02e42e",
   ];
 
+  const [resultados, setResultados] = useState(hoteis);
+  const handleSearch = (data: any) => {
+    const destino = data.destino.toLowerCase();
+
+    const filtrados = hoteis.filter((hotel) =>
+      hotel.localizacao.toLowerCase().includes(destino),
+    );
+
+    setResultados(filtrados);
+  };
+
   return (
     <div className=" bg-white">
       <Navbar />
-      <Hero />
+      <Hero onSearch={handleSearch} />
 
       {/* DESTINOS */}
       <section className="p-16 bg-gray-50">
@@ -75,8 +111,11 @@ function Home() {
                 <p className="text-gray-600 mt-2">{d.description}</p>
 
                 <div className="mt-4 flex justify-between items-center">
-                  <button className="w-full mt-8 bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-xl font-bold transition">
-                    Ver mais
+                  <button
+                    className="btn-ver-mais bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-full"
+                    onClick={() => navigate("/destinos")}
+                  >
+                    Ver Mais
                   </button>
                 </div>
               </div>

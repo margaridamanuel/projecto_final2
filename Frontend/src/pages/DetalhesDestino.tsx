@@ -1,57 +1,165 @@
-import HeroDestinos from "../components/HeroDestinos";
-import CategoriaDestino from "../components/CategoriaDestino";
-import Navbar from "../components/NavBar";
-import DestinoCard from "../components/DestinoCard";
-import GaleriaDestino from "../components/GaleriaDestino";
-import ComentariosDestino from "../components/ComentariosDestino";
-import FavoritosButton from "../components/FavoritoButton";
-import HotelProximo from "../components/HotelProximo";
-import { getDestinos } from "../service/destinosServices";
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Navbar from "../components/NavBar";
+import Footer from "../components/Footer";
+import { getDestinos } from "../service/destinosServices";
+import { getAlojamentos } from "../service/alojamentosService";
+
+interface Destino {
+  id: number;
+  nome: string;
+  provincia: string;
+  descricao: string;
+  imagem: string;
+  categoria: string;
+}
+
+interface Alojamento {
+  id: number;
+  nome: string;
+  provincia: string;
+  descricao: string;
+  imagem: string;
+}
 
 export default function DetalhesDestino() {
   const { id } = useParams();
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState("Todos");
-  const [destinos, setDestinos] = useState<any[]>([]);
-  useEffect(() => {
-    const fetchDestinos = async () => {
-      const data = await getDestinos();
-      setDestinos(data);
-    };
 
-    fetchDestinos();
+  const [destino, setDestino] = useState<Destino | null>(null);
+  const [alojamentos, setAlojamentos] = useState<Alojamento[]>([]);
+  const [mostrarAlojamentos, setMostrarAlojamentos] = useState(false);
+
+  const carregarAlojamentos = async () => {
+    try {
+      const resposta = await getAlojamentos();
+
+      console.log("ALOJAMENTOS:", resposta);
+
+      setAlojamentos(resposta);
+    } catch (error) {
+      console.error("Erro ao carregar alojamentos", error);
+    }
+  };
+
+  const carregarDestino = async () => {
+    try {
+      const resposta = await getDestinos();
+
+      const encontrado = resposta.data.find(
+        (d: Destino) => d.id === Number(id),
+      );
+
+      setDestino(encontrado);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    carregarDestino();
+    carregarAlojamentos();
   }, []);
 
-  const destino = destinos.find((d) => d.id === Number(id));
-
   if (!destino) {
-    return <div className="p-20 text-4xl"> Destino não encontrado</div>;
+    return <p className="text-center mt-20">Carregando destino...</p>;
   }
-  return (
-    <div className="p-20">
-      <h1 className="text-5xl font-bold">{destino.nome}</h1>
-      <p className="mt-5 text-gray-500">{destino.provincia}</p>
-      <GaleriaDestino imagens={destino.galeria} />
-      <p className="m-10 text-lg leading-8">
-        {destino.descricao}
-        <ComentariosDestino />
-        <HotelProximo />
-      </p>
-    </div>
+
+  const alojamentosProximos = alojamentos.filter(
+    (a) => a.provincia === destino?.provincia,
   );
-
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <>
       <Navbar />
-      <HeroDestinos onSearch={(value) => console.log(value)} />
 
-      <CategoriaDestino
-        categoriaSelecionada={categoriaSelecionada}
-        setCategoriaSelecionada={setCategoriaSelecionada}
-      />
+      <section className="max-w-6xl mx-auto px-6 py-12">
+        <div className="grid md:grid-cols-2 gap-10">
+          <img
+            src={destino.imagem}
+            alt={destino.nome}
+            className="
+          w-full
+          h-96
+          object-cover
+          rounded-3xl
+          "
+          />
 
-      <p>pagina detalhes do destino</p>
-    </div>
+          <div>
+            <span
+              className="
+          bg-orange-100
+          text-orange-500
+          px-4
+          py-2
+          rounded-full
+          "
+            >
+              {destino.categoria}
+            </span>
+
+            <h1 className="text-4xl font-bold mt-5">{destino.nome}</h1>
+
+            <p className="text-gray-500 text-lg mt-3"> {destino.provincia}</p>
+
+            <p className="mt-6 text-gray-700">{destino.descricao}</p>
+
+            <button
+              onClick={() => setMostrarAlojamentos(true)}
+              className=" mt-8 bg-orange-600 text-white px-6 py-3 rounded-xl "
+            >
+              Ver alojamentos próximos
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {mostrarAlojamentos && (
+        <section className="max-w-6xl mx-auto px-6 py-12">
+          <button
+            onClick={() => setMostrarAlojamentos(!mostrarAlojamentos)}
+            className="mt-8 bg-orange-600 text-white px-6 py-3 rounded-xl"
+          >
+            {mostrarAlojamentos
+              ? "Ocultar alojamentos"
+              : "Ver alojamentos próximos"}
+          </button>
+
+          {alojamentosProximos.length === 0 ? (
+            <p className="text-gray-500">
+              Nenhum alojamento disponivel nesta região.
+            </p>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-6">
+              {alojamentosProximos.map((hotel) => (
+                <div
+                  key={hotel.id}
+                  className="rounded-2xl shadow-lg overflow-hidden bg-white"
+                >
+                  <img
+                    src={hotel.imagem}
+                    alt={hotel.nome}
+                    className="w-full h-48 object-cover"
+                  />
+
+                  <div className="p-5">
+                    <h3 className="text-xl font-bold">{hotel.nome}</h3>
+
+                    <p className="text-gray-500"> {hotel.provincia}</p>
+
+                    <p className="mt-2">{hotel.descricao}</p>
+
+                    <button className="mt-4 bg-orange-600 text-white px-5 py-2 rounded-lg">
+                      Reservar
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      <Footer />
+    </>
   );
 }

@@ -1,8 +1,13 @@
 import AdminLayout from "../../components/Admin/AdminLayout";
+
 //import { alojamentosAdmin } from "../../data/alojamentosAdmin";
 
 import { useEffect, useState } from "react";
-import { getAlojamentos } from "../../service/alojamentosService";
+import {
+  getAlojamentos,
+  aprovarAlojamento,
+  rejeitarAlojamento,
+} from "../../service/alojamentosService";
 import { useNavigate } from "react-router-dom";
 export default function Alojamentos() {
   const navigate = useNavigate();
@@ -12,15 +17,48 @@ export default function Alojamentos() {
   const [pesquisa, setPesquisa] = useState("");
 
   useEffect(() => {
-    getAlojamentos()
-      .then((data) => {
-        console.log("Dados recebidos:", data);
-        setAlojamentos(data);
-      })
-      .catch((error) => {
-        console.error("Erro:", error);
-      });
+    carregarAlojamentos();
   }, []);
+
+  const aprovar = async (id: number) => {
+    try {
+      await aprovarAlojamento(id);
+
+      alert("Alojamento aprovado com sucesso!");
+
+      carregarAlojamentos();
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao aprovar alojamento.");
+    }
+  };
+
+  const rejeitar = async (id: number) => {
+    try {
+      await rejeitarAlojamento(id);
+
+      alert("Alojamento rejeitado com sucesso!");
+
+      carregarAlojamentos();
+    } catch (error) {
+      console.error(error);
+      alert("Erro ao rejeitar alojamento.");
+    }
+  };
+
+  const carregarAlojamentos = async () => {
+    try {
+      setLoading(true);
+
+      const data = await getAlojamentos();
+
+      setAlojamentos(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AdminLayout>
@@ -45,34 +83,58 @@ export default function Alojamentos() {
 
             <th className="border p-2">Província</th>
 
-            <th className="border p-2">Categoria</th>
+            <th className="border p-2">Tipo</th>
 
             <th className="border p-2">Estado</th>
 
             <th className="border p-2">Ações</th>
           </tr>
         </thead>
-        /*
+
         <tbody>
-          //
           {alojamentos.map((item) => (
             <tr key={item.id}>
+              <td className="border p-2">{item.nome}</td>
+
               <td className="border p-2">{item.provincia}</td>
 
-              <td className="border p-2">{item.categoria}</td>
+              <td className="border p-2">{item.tipo}</td>
 
-              <td className="border p-2">{item.estado}</td>
+              <td className="border p-2">
+                <span
+                  className="
+            bg-yellow-100 
+            px-3 
+            py-1 
+            rounded-full
+            text-sm
+          "
+                >
+                  {item.status}
+                </span>
+              </td>
 
               <td className="border p-2 space-x-2">
-                <button className="border px-2 py-1">Ver</button>
+                <button
+                  onClick={() => navigate(`/admin/alojamentos/${item.id}`)}
+                  className="bg-orange-600 text-white rounded-lg  px-3  py-2"
+                >
+                  Ver
+                </button>
 
-                <button className="border px-2 py-1">Editar</button>
+                <button
+                  onClick={() => aprovar(item.id)}
+                  className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                >
+                  Aprovar
+                </button>
 
-                <button className="border px-2 py-1">Aprovar</button>
-
-                <button className="border px-2 py-1">Rejeitar</button>
-
-                <button className="border px-2 py-1">Eliminar</button>
+                <button
+                  onClick={() => rejeitar(item.id)}
+                  className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                >
+                  Rejeitar
+                </button>
               </td>
             </tr>
           ))}

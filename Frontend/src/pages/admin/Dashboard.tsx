@@ -1,6 +1,23 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import AdminLayout from "../../components/Admin/AdminLayout";
 
 export default function Dashboard() {
+  const [utilizadores, setUtilizadores] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/v1/utilizadores")
+      .then((response) => {
+        console.log("Resposta da API:", response.data);
+
+        setUtilizadores(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar utilizadores:", error);
+      });
+  }, []);
+
   return (
     <AdminLayout>
       <div className="space-y-8">
@@ -40,7 +57,7 @@ export default function Dashboard() {
 
               <tr>
                 <td className="py-2">Utilizadores</td>
-                <td className="text-right font-bold">138</td>
+                <td className="text-right font-bold">{utilizadores.length}</td>
               </tr>
             </tbody>
           </table>
