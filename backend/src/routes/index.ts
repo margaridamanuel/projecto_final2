@@ -4,6 +4,7 @@ import alojamentosRouter from "./alojamentosRouter";
 import authRouter from "./auth.routes";
 import reservaRouter from "./reservaRoutes";
 import utilizadorRouter from "./utilizadorRoutes";
+
 const routesRoot = Router();
 
 routesRoot.use(destinoRouter);

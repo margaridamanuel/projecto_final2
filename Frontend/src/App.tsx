@@ -8,10 +8,9 @@ import Registro from "./pages/Registro";
 import RegistroHotel from "./pages/RegistroHotel";
 import MelhoresPrecos from "./components/MelhoresPrecos";
 import Footer from "./components/Footer";
-//import Hoteis from "./pages/Alojamentos";
+import DetalhesAlojamento from "./pages/AlojamentosDetalhes";
 //import DetalheHotel from "./pages/DetalhesHotel";
 import NavBar from "./components/NavBar";
-/*import DashboardAdmin from "./pages/DashboardAdmin";*/
 import Reserva from "./pages/Reserva";
 import DetalhesDestino from "./pages/DetalhesDestino";
 import Alojamentos from "./pages/Alojamentos";
@@ -20,6 +19,7 @@ import CadastroAlojamento from "./pages/CadastroAlojamento";
 import Dashboard from "./pages/admin/Dashboard";
 import AlojamentosAdmin from "./components/Admin/Alojamentos";
 import { authService, Usuario } from "./service/authService";
+import Utilizadores from "./pages/admin/utilizadores";
 import React from "react";
 
 // APP PRINCIPAL
@@ -68,14 +68,16 @@ function App() {
         <Route path="/login" element={<Login onLogin={entrar} />} />
         <Route path="/Registro" element={<Registro />} />
         <Route path="/cadastro-hotel" element={<RegistroHotel />} />
-        {/* <Route path="/admin" element={<DashboardAdmin />} /> */}
         <Route path="/reserva/:id" element={<Reserva />} />
         <Route path="/melhores-precos" element={<MelhoresPrecos />} />
-        {/* <Route path="/hoteis/:id" element={<DetalheHotel />} /> */}
         <Route path="/alojamentos/:id" element={<AlojamentoDetalhes />} />
         <Route path="/cadastro-alojamento" element={<CadastroAlojamento />} />
         <Route path="/admin" element={<Dashboard />} />
         <Route path="/admin/alojamentos" element={<AlojamentosAdmin />} />
+        <Route path="/reservas" element={<Reserva />} />
+        <Route path="/admin/utilizadores" element={<Utilizadores />} />
+        <Route path="/admin/alojamentos/:id" element={<DetalhesAlojamento />} />
+        <Route path="/destinos/:id" element={<DetalhesDestino />} />
       </Routes>
     </BrowserRouter>
   );

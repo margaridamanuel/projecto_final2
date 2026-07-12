@@ -1,4 +1,6 @@
 import { useState } from "react";
+import axios from "axios";
+import { API_URL } from "../Config/api";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import Stepper from "../components/CadastroAlojamento/Stepper";
@@ -82,7 +84,7 @@ export default function CadastroAlojamento() {
     }
   };
 
-  const finalizarCadastro = () => {
+  const finalizarCadastro = async () => {
     if (!formData.proprietario) {
       alert("Informe o nome do proprietário.");
       return;
@@ -109,9 +111,57 @@ export default function CadastroAlojamento() {
     }
 
     // Aqui, mais tarde, vamos enviar os dados para o backend.
-    console.log(formData);
+    try {
+      const dados = new FormData();
 
-    alert("Cadastro realizado com sucesso!");
+      dados.append("nome", formData.nome);
+
+      dados.append("categoria", formData.categoria);
+
+      dados.append("descricao", formData.descricao);
+
+      dados.append("quartos", String(formData.quartos));
+
+      dados.append("preco", String(formData.preco));
+
+      dados.append("provincia", formData.provincia);
+
+      dados.append("municipio", formData.municipio);
+
+      dados.append("endereco", formData.endereco);
+
+      dados.append("servicos", JSON.stringify(formData.servicos));
+
+      dados.append("proprietario", formData.proprietario);
+
+      dados.append("email", formData.email);
+
+      dados.append("telefone", formData.telefone);
+
+      dados.append("password", formData.password);
+
+      formData.fotos.forEach((foto: File) => {
+        dados.append("fotos", foto);
+      });
+
+      const resposta = await axios.post(
+        "http://localhost:3000/api/v1/alojamentos",
+        dados,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      console.log(resposta.data);
+
+      alert("Alojamento cadastrado com sucesso!");
+    } catch (erro) {
+      console.error(erro);
+
+      alert("Erro ao cadastrar alojamento.");
+    }
   };
 
   const prevStep = () => {

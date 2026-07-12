@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 type Props = {
   alojamento: {
     id: number;

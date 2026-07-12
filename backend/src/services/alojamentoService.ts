@@ -11,4 +11,65 @@ export class AlojamentosService {
       },
     });
   }
+
+  async criarAlojamento(data: any, fotos: Express.Multer.File[] = []) {
+    const proprietario = await prisma.user.create({
+      data: {
+        nome: data.proprietario,
+        email: data.email,
+        password: data.password,
+        role: "PROPRIETARIO",
+        keycloakId: `local-${Date.now()}`,
+      },
+    });
+
+    const alojamento = await prisma.alojamento.create({
+      data: {
+        nome: data.nome,
+
+        descricao: data.descricao,
+
+        tipo: data.categoria.toUpperCase(),
+
+        quartos: Number(data.quartos),
+
+        preco: Number(data.preco),
+
+        provincia: data.provincia,
+
+        municipio: data.municipio,
+
+        endereco: data.endereco,
+
+        servicos: data.servicos,
+
+        imagem: fotos.length > 0 ? fotos[0].filename : "sem-imagem.jpg",
+
+        proprietarioId: proprietario.id,
+      },
+    });
+
+    if (fotos.length > 0) {
+      await prisma.imagem.createMany({
+        data: fotos.map((foto) => ({
+          url: foto.filename,
+          alojamentoId: alojamento.id,
+        })),
+      });
+    }
+
+    return alojamento;
+  }
+
+  async atualizarStatus(id: number, status: string) {
+    return await prisma.alojamento.update({
+      where: {
+        id,
+      },
+
+      data: {
+        status: status as any,
+      },
+    });
+  }
 }

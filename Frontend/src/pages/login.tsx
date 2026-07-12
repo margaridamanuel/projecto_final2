@@ -16,6 +16,10 @@ function Login({ onLogin }: { onLogin: (usuario: Usuario) => void }) {
 
     try {
       const usuario = await authService.login({ username, password });
+
+      // guardar utilizador logado
+      localStorage.setItem("utilizador", JSON.stringify(usuario));
+
       onLogin(usuario);
     } catch (error) {
       setErro(
