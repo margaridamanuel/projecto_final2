@@ -64,45 +64,6 @@ export default function Dashboard() {
         </div>
 
         {/* Últimos alojamentos */}
-        <div className="border rounded p-4 bg-white">
-          <h2 className="text-xl font-semibold mb-4">
-            Últimos alojamentos cadastrados
-          </h2>
-
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="border-b bg-gray-100">
-                <th className="text-left p-2">Nome</th>
-                <th className="text-left p-2">Província</th>
-                <th className="text-left p-2">Estado</th>
-                <th className="text-left p-2">Data</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr className="border-b">
-                <td className="p-2">Hotel Miramar</td>
-                <td className="p-2">Luanda</td>
-                <td className="p-2">Pendente</td>
-                <td className="p-2">01/07/2026</td>
-              </tr>
-
-              <tr className="border-b">
-                <td className="p-2">Resort Baía Azul</td>
-                <td className="p-2">Benguela</td>
-                <td className="p-2">Aprovado</td>
-                <td className="p-2">30/06/2026</td>
-              </tr>
-
-              <tr>
-                <td className="p-2">Pousada Namibe</td>
-                <td className="p-2">Namibe</td>
-                <td className="p-2">Pendente</td>
-                <td className="p-2">29/06/2026</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
     </AdminLayout>
   );

@@ -39,15 +39,36 @@ export default function Alojamentos() {
     const categoria =
       categoriaSelecionada === "Todos" || item.tipo === categoriaSelecionada;
 
-    const pesquisa = filtro.destino.toLowerCase();
+    const pesquisa = filtro.destino.trim().toLowerCase();
 
-    const texto =
+    const correspondePesquisa =
       pesquisa === "" ||
       item.nome.toLowerCase().includes(pesquisa) ||
       item.provincia.toLowerCase().includes(pesquisa);
 
-    return categoria && texto;
+    return categoria && correspondePesquisa;
   });
+  const categorias = [
+    { nome: "Todos", valor: "Todos" },
+    { nome: "Hotéis", valor: "HOTEL" },
+    { nome: "Resorts", valor: "RESORT" },
+    { nome: "Guesthouse", valor: "GUESTHOUSE" },
+  ];
+
+  const obterImagem = (imagem: string) => {
+    if (!imagem) return "";
+
+    if (imagem.startsWith("http")) {
+      return imagem;
+    }
+
+    return `http://localhost:3000/uploads/${imagem}`;
+  };
+
+  const formatarPreco = (preco: number | string) => {
+    return Number(preco).toLocaleString("pt-AO") + " Kz";
+  };
+
   return (
     <>
       <Navbar />
@@ -64,23 +85,17 @@ export default function Alojamentos() {
             {alojamentosFiltrados.length} alojamento(s) encontrado(s)
           </p>
           <div className="flex justify-center gap-4 flex-wrap">
-            {["Todos", "Hotel", "Resort", "Pensão"].map((categoria) => (
+            {categorias.map((categoria) => (
               <button
-                key={categoria}
-                onClick={() => setCategoriaSelecionada(categoria)}
+                key={categoria.valor}
+                onClick={() => setCategoriaSelecionada(categoria.valor)}
                 className={`px-6 py-3 rounded-full font-semibold transition ${
-                  categoriaSelecionada === categoria
+                  categoriaSelecionada === categoria.valor
                     ? "bg-orange-500 text-white"
                     : "bg-white border hover:bg-orange-50"
                 }`}
               >
-                {categoria === "Hotel"
-                  ? "Hotéis"
-                  : categoria === "Resort"
-                    ? "Resorts"
-                    : categoria === "GuestHouse"
-                      ? "GuestHouse"
-                      : "Todos"}
+                {categoria.nome}
               </button>
             ))}
           </div>
@@ -95,7 +110,11 @@ export default function Alojamentos() {
           {/* Imagem grande */}
 
           <div className="col-span-2 row-span-2 relative rounded-3xl overflow-hidden group">
-            <img src={alojamentos[0]?.imagem} alt={alojamentos[0]?.nome} />
+            <img
+              src={obterImagem(alojamentos[0]?.imagem)}
+              alt={alojamentos[0]?.nome}
+              className="w-full h-full object-cover"
+            />
 
             <div className="absolute inset-0 bg-black/40"></div>
 
@@ -116,10 +135,10 @@ export default function Alojamentos() {
 
           <div className="relative rounded-3xl overflow-hidden group">
             <img
-              src={alojamentos[1]?.imagem}
-              className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+              src={obterImagem(alojamentos[1]?.imagem)}
+              alt={alojamentos[1]?.nome}
+              className="w-full h-full object-cover"
             />
-
             <div className="absolute inset-0 bg-black/40"></div>
 
             <div className="absolute bottom-4 left-4 text-white">
@@ -131,10 +150,10 @@ export default function Alojamentos() {
 
           <div className="relative rounded-3xl overflow-hidden group">
             <img
-              src={alojamentos[2]?.imagem}
-              className="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+              src={obterImagem(alojamentos[2]?.imagem)}
+              alt={alojamentos[2]?.nome}
+              className="w-full h-full object-cover"
             />
-
             <div className="absolute inset-0 bg-black/40"></div>
 
             <div className="absolute bottom-4 left-4 text-white">
@@ -165,34 +184,46 @@ export default function Alojamentos() {
                 className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-xl transition"
               >
                 <img
-                  src={item.imagem}
+                  src={obterImagem(item.imagem)}
                   alt={item.nome}
-                  className="w-full h-60 object-cover"
+                  className="w-full h-64 object-cover"
                 />
 
                 <div className="p-6">
                   <div className="flex justify-between">
                     <h3 className="text-xl font-bold">{item.nome}</h3>
 
-                    <span> {item.estrelas}</span>
+                    <div className="flex items-center gap-1 text-yellow-500">
+                      {"★".repeat(item.estrelas)}
+                      {"☆".repeat(5 - item.estrelas)}
+                    </div>
                   </div>
 
-                  <p className="text-gray-500 mt-2">{item.provincia}</p>
-
-                  <p className="text-orange-500 text-xl font-bold mt-4">
-                    {item.preco}
+                  <p className="text-gray-500 mt-2">
+                    📍 {item.municipio}, {item.provincia}
                   </p>
+                  <p className="text-gray-600 mt-3 line-clamp-2">
+                    {item.descricao}
+                  </p>
+                  <div className="mt-5">
+                    <p className="text-sm text-gray-500 uppercase tracking-wide">
+                      Desde / Noite
+                    </p>
 
+                    <p className="text-3xl font-bold text-orange-500">
+                      {formatarPreco(item.preco)}
+                    </p>
+                  </div>
                   <div className="flex justify-between items-center mt-6">
-                    <span className="bg-gray-100 px-4 py-2 rounded-full text-sm">
+                    <span className="bg-orange-100 text-orange-700 px-4 py-2 rounded-full text-sm font-semibold">
                       {item.tipo}
                     </span>
 
                     <button
-                      className="btn-reserva  bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-full"
-                      onClick={() => navigate("/reservas")}
+                      onClick={irParaReservas}
+                      className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold transition"
                     >
-                      Reserva
+                      Reservar
                     </button>
                   </div>
                 </div>
