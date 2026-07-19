@@ -11,7 +11,7 @@ app.use(
   }),
 );
 app.use(express.json());
-app.use("/uploads", express.static(path.resolve("uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/v1", routesRoot);
 
 app.get("/", (__, res) => {

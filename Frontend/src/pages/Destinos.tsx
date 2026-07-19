@@ -62,7 +62,14 @@ export default function Destinos() {
 
       <section className="max-w-7xl mx-auto px-6 py-8">
         <div className="flex justify-center gap-4 flex-wrap">
-          {["Todos", "PRAIA", "NATUREZA", "CULTURA", "AVENTURA"].map((cat) => (
+          {[
+            "Todos",
+            "PRAIA",
+            "NATUREZA",
+            "CULTURA",
+            "AVENTURA",
+            "HISTORIA",
+          ].map((cat) => (
             <button
               key={cat}
               onClick={() => setCategoria(cat)}

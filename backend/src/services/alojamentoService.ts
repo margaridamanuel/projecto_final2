@@ -13,38 +13,36 @@ export class AlojamentosService {
   }
 
   async criarAlojamento(data: any, fotos: Express.Multer.File[] = []) {
-    const proprietario = await prisma.user.create({
-      data: {
-        nome: data.proprietario,
+    let proprietario = await prisma.user.findUnique({
+      where: {
         email: data.email,
-        password: data.password,
-        role: "PROPRIETARIO",
-        keycloakId: `local-${Date.now()}`,
       },
     });
+
+    if (!proprietario) {
+      proprietario = await prisma.user.create({
+        data: {
+          nome: data.proprietario,
+          email: data.email,
+          password: data.password,
+          role: "PROPRIETARIO",
+          keycloakId: `local-${Date.now()}`,
+        },
+      });
+    }
 
     const alojamento = await prisma.alojamento.create({
       data: {
         nome: data.nome,
-
         descricao: data.descricao,
-
         tipo: data.categoria.toUpperCase(),
-
         quartos: Number(data.quartos),
-
         preco: Number(data.preco),
-
         provincia: data.provincia,
-
         municipio: data.municipio,
-
         endereco: data.endereco,
-
         servicos: data.servicos,
-
         imagem: fotos.length > 0 ? fotos[0].filename : "sem-imagem.jpg",
-
         proprietarioId: proprietario.id,
       },
     });
