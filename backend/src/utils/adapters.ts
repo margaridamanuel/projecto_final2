@@ -9,7 +9,7 @@ export const transformDataCreateUSer = (data: any) => {
     email: data.email,
     firstName,
     lastName,
-    groups: [data.groups],
+    groups: data.groups,
     credentials: [
       {
         temporary: false,

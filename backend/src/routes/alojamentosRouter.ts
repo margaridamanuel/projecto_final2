@@ -6,18 +6,28 @@ const router = Router();
 
 const controller = new AlojamentosController();
 
-// Listar alojamentos
-router.get("/alojamentos", (req, res) => {
-  controller.listar(req, res);
-});
+// LISTAR DO PROPRIETÁRIO
+router.get(
+  "/alojamentos/proprietario/:id",
+  controller.listarDoProprietario.bind(controller),
+);
 
-// Criar alojamento
-router.post("/alojamentos", upload.array("fotos", 10), (req, res) => {
-  controller.criar(req, res);
-});
+// BUSCAR POR ID
+router.get("/alojamentos/:id", controller.buscarPorId.bind(controller));
 
-router.patch("/alojamentos/:id/status", (req, res) => {
-  controller.atualizarStatus(req, res);
-});
+// CRIAR
+router.post(
+  "/alojamentos",
+  upload.array("fotos", 10),
+  controller.criar.bind(controller),
+);
 
+// ALTERAR STATUS
+router.patch(
+  "/alojamentos/:id/status",
+  controller.atualizarStatus.bind(controller),
+);
+
+// LISTAR TODOS
+router.get("/alojamentos", controller.listar.bind(controller));
 export default router;

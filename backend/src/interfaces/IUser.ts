@@ -4,4 +4,5 @@ export interface IUser {
   email: string;
   password: string;
   keycloakId: string;
+  role: "ADMIN" | "PROPRIETARIO" | "CLIENTE";
 }

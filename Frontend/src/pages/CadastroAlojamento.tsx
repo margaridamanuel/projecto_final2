@@ -1,14 +1,17 @@
 import { useState } from "react";
 import axios from "axios";
+
 import { API_URL } from "../Config/api";
+import { authService } from "../service/authService";
+
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
+
 import Stepper from "../components/CadastroAlojamento/Stepper";
 import Step1Informacoes from "../components/CadastroAlojamento/Step1Informacoes";
 import Step2Localizacao from "../components/CadastroAlojamento/Step2Localizacao";
 import Step3Servicos from "../components/CadastroAlojamento/Step3Servico";
 import Step4Fotos from "../components/CadastroAlojamento/Step4Fotos";
-import Step5Conta from "../components/CadastroAlojamento/Step5Conta";
 
 export default function CadastroAlojamento() {
   const [step, setStep] = useState(1);
@@ -31,17 +34,9 @@ export default function CadastroAlojamento() {
 
     // Etapa 4
     fotos: [] as File[],
-
-    // Etapa 5
-    proprietario: "",
-    email: "",
-    telefone: "",
-    password: "",
-    confirmarPassword: "",
   });
 
   const nextStep = () => {
-    // Etapa 1
     if (step === 1) {
       if (
         !formData.nome ||
@@ -55,7 +50,6 @@ export default function CadastroAlojamento() {
       }
     }
 
-    // Etapa 2
     if (step === 2) {
       if (!formData.provincia || !formData.municipio || !formData.endereco) {
         alert("Preencha todos os campos da localização.");
@@ -63,7 +57,6 @@ export default function CadastroAlojamento() {
       }
     }
 
-    // Etapa 3
     if (step === 3) {
       if (formData.servicos.length === 0) {
         alert("Selecione pelo menos um serviço.");
@@ -71,46 +64,19 @@ export default function CadastroAlojamento() {
       }
     }
 
-    // Etapa 4
-    if (step === 4) {
-      if (formData.fotos.length === 0) {
-        alert("Adicione pelo menos uma fotografia.");
-        return;
-      }
-    }
-
-    if (step < 5) {
+    if (step < 4) {
       setStep(step + 1);
     }
   };
 
   const finalizarCadastro = async () => {
-    if (!formData.proprietario) {
-      alert("Informe o nome do proprietário.");
+    const usuario = authService.getSession();
+
+    if (!usuario) {
+      alert("Precisa estar autenticado.");
       return;
     }
 
-    if (!formData.email) {
-      alert("Informe o e-mail.");
-      return;
-    }
-
-    if (!formData.telefone) {
-      alert("Informe o telefone.");
-      return;
-    }
-
-    if (!formData.password) {
-      alert("Informe a palavra-passe.");
-      return;
-    }
-
-    if (formData.password !== formData.confirmarPassword) {
-      alert("As palavras-passe não coincidem.");
-      return;
-    }
-
-    // Aqui, mais tarde, vamos enviar os dados para o backend.
     try {
       const dados = new FormData();
 
@@ -132,40 +98,49 @@ export default function CadastroAlojamento() {
 
       dados.append("servicos", JSON.stringify(formData.servicos));
 
-      dados.append("proprietario", formData.proprietario);
+      // ID do proprietário autenticado
+      dados.append("proprietarioId", String(usuario.id));
 
-      dados.append("email", formData.email);
-
-      dados.append("telefone", formData.telefone);
-
-      dados.append("password", formData.password);
-
-      formData.fotos.forEach((foto: File) => {
+      formData.fotos.forEach((foto) => {
         dados.append("fotos", foto);
       });
 
-      const resposta = await axios.post(
-        "http://localhost:3000/api/v1/alojamentos",
-        dados,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+      const resposta = await axios.post(`${API_URL}/alojamentos`, dados, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-      );
+      });
 
-      console.log(resposta.data);
+      console.log("ALOJAMENTO CRIADO:", resposta.data);
 
       alert("Alojamento cadastrado com sucesso!");
+
+      // limpar formulário
+      setFormData({
+        nome: "",
+        categoria: "",
+        descricao: "",
+        quartos: "",
+        preco: "",
+        provincia: "",
+        municipio: "",
+        endereco: "",
+        servicos: [],
+        fotos: [],
+      });
+
+      setStep(1);
     } catch (erro) {
-      console.error(erro);
+      console.error("ERRO AO CADASTRAR ALOJAMENTO:", erro);
 
       alert("Erro ao cadastrar alojamento.");
     }
   };
 
   const prevStep = () => {
-    if (step > 1) setStep(step - 1);
+    if (step > 1) {
+      setStep(step - 1);
+    }
   };
 
   return (
@@ -182,41 +157,47 @@ export default function CadastroAlojamento() {
             Faça parte da Travel Angola e receba turistas de todo o mundo.
           </p>
 
-          {/* Barra de progresso (temporária) */}
           <Stepper currentStep={step} />
 
-          {/* Conteúdo */}
           <div className="min-h-[350px] flex items-center justify-center border rounded-xl bg-gray-50">
             {step === 1 && (
               <Step1Informacoes formData={formData} setFormData={setFormData} />
             )}
+
             {step === 2 && (
               <Step2Localizacao formData={formData} setFormData={setFormData} />
             )}
+
             {step === 3 && (
               <Step3Servicos formData={formData} setFormData={setFormData} />
             )}
+
             {step === 4 && (
               <Step4Fotos formData={formData} setFormData={setFormData} />
             )}
-            {step === 5 && (
-              <Step5Conta formData={formData} setFormData={setFormData} />
-            )}
           </div>
 
-          {/* Botões */}
           <div className="flex justify-between mt-8">
-            {step < 5 ? (
+            {step > 1 && (
+              <button
+                onClick={prevStep}
+                className="px-6 py-3 rounded-lg bg-gray-500 text-white hover:bg-gray-600"
+              >
+                Voltar
+              </button>
+            )}
+
+            {step < 4 ? (
               <button
                 onClick={nextStep}
-                className="px-6 py-3 rounded-lg bg-orange-600 text-white hover:bg-orange-700"
+                className="ml-auto px-6 py-3 rounded-lg bg-orange-600 text-white hover:bg-orange-700"
               >
                 Próximo
               </button>
             ) : (
               <button
                 onClick={finalizarCadastro}
-                className="px-6 py-3 rounded-lg bg-orange-600 text-white hover:bg-orange-700"
+                className="ml-auto px-6 py-3 rounded-lg bg-orange-600 text-white hover:bg-orange-700"
               >
                 Finalizar Cadastro
               </button>
