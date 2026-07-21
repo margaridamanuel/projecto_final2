@@ -8,6 +8,7 @@ function Registro() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmarPassword, setConfirmarPassword] = useState("");
+  const [grupo, setGrupo] = useState("geral");
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +25,7 @@ function Registro() {
           nome,
           email,
           password,
+          grupo,
         },
       );
 
@@ -86,6 +88,19 @@ function Registro() {
             onChange={handleChange}
             className="w-full border p-3 mb-4 rounded"
           />
+
+          <div className="mb-4">
+            <label className="block mb-2 font-medium">Tipo de Conta</label>
+
+            <select
+              value={grupo}
+              onChange={(e) => setGrupo(e.target.value)}
+              className="w-full border p-3 rounded"
+            >
+              <option value="/geral">Turista</option>
+              <option value="/host">Proprietário</option>
+            </select>
+          </div>
 
           <input
             type="password"

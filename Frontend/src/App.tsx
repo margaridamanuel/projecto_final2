@@ -9,7 +9,6 @@ import RegistroHotel from "./pages/RegistroHotel";
 import MelhoresPrecos from "./components/MelhoresPrecos";
 import Footer from "./components/Footer";
 import DetalhesAlojamento from "./pages/AlojamentosDetalhes";
-//import DetalheHotel from "./pages/DetalhesHotel";
 import NavBar from "./components/NavBar";
 import Reserva from "./pages/Reserva";
 import DetalhesDestino from "./pages/DetalhesDestino";
@@ -21,6 +20,13 @@ import AlojamentosAdmin from "./components/Admin/Alojamentos";
 import { authService, Usuario } from "./service/authService";
 import Utilizadores from "./pages/admin/utilizadores";
 
+import DashboardProprietario from "./pages/Proprietario/Dashboard2";
+import MeusAlojamentos from "./pages/Proprietario/MeusAlojamentos";
+import Reservas2 from "./pages/Proprietario/Reservas2";
+import AvaliacoesProprietario from "./pages/Proprietario/Avaliacoes";
+import PerfilProprietario from "./pages/Proprietario/Perfil";
+
+import ProtectedRoute from "./components/protectedRoute";
 import React from "react";
 
 // APP PRINCIPAL
@@ -46,8 +52,12 @@ function App() {
     setUsuario(usuarioLogado);
     const temPermissaoAdmin = usuarioLogado.groups.includes("/admin");
     const temPermissaoGeral = usuarioLogado.groups.includes("/geral");
+    const temPermissaoHost = usuarioLogado.groups.includes("/host");
     if (temPermissaoAdmin) {
       location.href = temPermissaoAdmin ? "/admin" : "/admin";
+    }
+    if (temPermissaoHost) {
+      location.href = temPermissaoHost ? "/proprietario" : "/proprietario";
     }
     if (temPermissaoGeral) {
       location.href = temPermissaoGeral ? "/" : "/";
@@ -73,12 +83,88 @@ function App() {
         <Route path="/melhores-precos" element={<MelhoresPrecos />} />
         <Route path="/alojamentos/:id" element={<AlojamentoDetalhes />} />
         <Route path="/cadastro-alojamento" element={<CadastroAlojamento />} />
-        <Route path="/admin" element={<Dashboard />} />
-        <Route path="/admin/alojamentos" element={<AlojamentosAdmin />} />
-        <Route path="/reservas" element={<Reserva />} />
-        <Route path="/admin/utilizadores" element={<Utilizadores />} />
-        <Route path="/admin/alojamentos/:id" element={<DetalhesAlojamento />} />
-        <Route path="/destinos/:id" element={<DetalhesDestino />} />
+        <Route path="/reserva/:id" element={<Reserva />} />
+        <Route
+          path="/proprietario/avaliacoes"
+          element={<AvaliacoesProprietario />}
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute grupo="/admin">
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/alojamentos"
+          element={
+            <ProtectedRoute grupo="/admin">
+              <AlojamentosAdmin />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/utilizadores"
+          element={
+            <ProtectedRoute grupo="/admin">
+              <Utilizadores />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/alojamentos/:id"
+          element={
+            <ProtectedRoute grupo="/admin">
+              <DetalhesAlojamento />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/proprietario"
+          element={
+            <ProtectedRoute grupo="/host">
+              <DashboardProprietario />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/proprietario/alojamentos"
+          element={
+            <ProtectedRoute grupo="/host">
+              <MeusAlojamentos />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/proprietario/perfil"
+          element={
+            <ProtectedRoute grupo="/host">
+              <PerfilProprietario />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/proprietario/reservas"
+          element={
+            <ProtectedRoute grupo="/host">
+              <Reservas2 />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/proprietario/avaliacoes"
+          element={
+            <ProtectedRoute grupo="/host">
+              <AvaliacoesProprietario />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

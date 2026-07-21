@@ -1,22 +1,22 @@
 import { Link, useLocation } from "react-router-dom";
 
 const menu = [
-  { nome: "Dashboard", rota: "/admin" },
-  { nome: "Alojamentos", rota: "/admin/alojamentos" },
-  { nome: "Reservas", rota: "/admin/reservas" },
-  { nome: "Utilizadores", rota: "/admin/utilizadores" },
-  { nome: "Avaliações", rota: "/admin/avaliacoes" },
-  { nome: "Configurações", rota: "/admin/configuracoes" },
+  { nome: "Dashboard", rota: "/proprietario" },
+  { nome: "Meus Alojamentos", rota: "/proprietario/alojamentos" },
+  { nome: "Reservas", rota: "/proprietario/reservas" },
+  { nome: "Avaliações", rota: "/proprietario/avaliacoes" },
+  { nome: "Perfil", rota: "/proprietario/perfil" },
 ];
+
 export default function Sidebar() {
   const location = useLocation();
 
   return (
-    <aside className="w-64 bg-slate-700 text-white min-h-screen">
-      <div className="p-6 border-b border-slate-600">
+    <aside className="w-64 bg-blue-950 text-white min-h-screen">
+      <div className="p-6 border-b border-blue-600">
         <h1 className="text-2xl font-bold">Travel Angola</h1>
 
-        <p className="text-sm text-orange-100">Administração</p>
+        <p className="text-sm text-orange-100">Proprietário</p>
       </div>
 
       <nav className="mt-6">
@@ -26,8 +26,8 @@ export default function Sidebar() {
             to={item.rota}
             className={`block px-6 py-4 transition ${
               location.pathname === item.rota
-                ? "bg-slate-600"
-                : "hover:bg-slate-600"
+                ? "bg-blue-600"
+                : "hover:bg-blue-700"
             }`}
           >
             {item.nome}

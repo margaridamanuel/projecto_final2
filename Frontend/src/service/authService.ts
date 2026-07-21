@@ -10,7 +10,11 @@ export type LoginRequest = {
 };
 
 export type Usuario = {
+  id: number;
   name: string;
+  email: string;
+  role: string;
+  keycloakId: string;
   groups: string[];
   accessToken: string;
   refreshToken: string;
@@ -22,6 +26,7 @@ type LoginResponse = {
     message: string;
   };
   data?: {
+    id?: number;
     accessToken?: string;
     refreshToken?: string;
     userInfo?: {
@@ -68,16 +73,25 @@ function normalizeLoginResponse(data: LoginResponse): Usuario {
   const userInfo = data.data?.userInfo;
 
   return {
-    name: userInfo?.name ?? data.name ?? userInfo?.preferred_username ?? "",
-    groups: data.data?.groups ?? userInfo?.groups ?? data.groups ?? [],
-    accessToken:
-      data.data?.accessToken ??
-      data.AccesToken ??
-      data.AccessToken ??
-      data.accessToken ??
-      "",
-    refreshToken:
-      data.data?.refreshToken ?? data.RefreshToken ?? data.refreshToken ?? "",
+    id: data.data?.id ?? 0,
+
+    name: userInfo?.name ?? userInfo?.preferred_username ?? "",
+
+    email: userInfo?.email ?? "",
+
+    role: data.data?.groups?.includes("/admin")
+      ? "ADMIN"
+      : data.data?.groups?.includes("/host")
+        ? "PROPRIETARIO"
+        : "CLIENTE",
+
+    keycloakId: "",
+
+    groups: data.data?.groups ?? [],
+
+    accessToken: data.data?.accessToken ?? "",
+
+    refreshToken: data.data?.refreshToken ?? "",
   };
 }
 

@@ -2,13 +2,7 @@ type StepperProps = {
   currentStep: number;
 };
 
-const steps = [
-  "Informações",
-  "Localização",
-  "Serviços",
-  "Fotografias",
-  "Conta",
-];
+const steps = ["Informações", "Localização", "Serviços", "Fotografias"];
 
 export default function Stepper({ currentStep }: StepperProps) {
   return (

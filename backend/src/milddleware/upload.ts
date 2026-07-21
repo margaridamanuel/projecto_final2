@@ -2,7 +2,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-const pastaUploads = path.resolve("uploads");
+const pastaUploads = path.join(__dirname, "../../uploads");
 
 if (!fs.existsSync(pastaUploads)) {
   fs.mkdirSync(pastaUploads, { recursive: true });

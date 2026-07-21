@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createUser, findAllUser } from "../services/UserService";
+import { createUser, findAllUser, findUserById } from "../services/UserService";
 import AuthService from "../services/AuthService";
 import { transformDataCreateUSer } from "../utils/adapters";
 
@@ -10,17 +10,29 @@ export class UtilizadorController {
     try {
       const data = req.body;
 
-      const userAuth = await AuthService.createUSer(
-        transformDataCreateUSer({
-          ...data,
-          groups: "geral", // Alterar para receber o que vem do front.
-        }),
-      );
+      const dadosKeycloak = transformDataCreateUSer({
+        ...data,
+        groups: data.grupo,
+      });
+
+      console.log("DADOS TRANSFORMADOS PARA KEYCLOAK:", dadosKeycloak);
+
+      const userAuth = await AuthService.createUSer(dadosKeycloak);
 
       const { data: keycloakId } = userAuth;
+
       if (!keycloakId) throw new Error("Erro ao criar utilizador no Keycloak");
 
-      const user = await createUser({ ...data, keycloakId });
+      const user = await createUser({
+        ...data,
+        keycloakId,
+        role:
+          data.grupo === "/admin"
+            ? "ADMIN"
+            : data.grupo === "/host"
+              ? "PROPRIETARIO"
+              : "CLIENTE",
+      });
       return res.status(201).send({
         response: {
           statusCode: 201,
@@ -47,6 +59,27 @@ export class UtilizadorController {
     } catch (error) {
       return res.status(400).json({
         message: "Erro ao obter utilizador",
+        error,
+      });
+    }
+  }
+
+  async obterUtilizadorPorId(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+
+      const utilizador = await findUserById(id);
+
+      if (!utilizador) {
+        return res.status(404).json({
+          mensagem: "Utilizador não encontrado",
+        });
+      }
+
+      return res.status(200).json(utilizador);
+    } catch (error) {
+      return res.status(500).json({
+        mensagem: "Erro ao obter utilizador",
         error,
       });
     }

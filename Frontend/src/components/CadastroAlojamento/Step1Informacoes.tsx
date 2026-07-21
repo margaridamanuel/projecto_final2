@@ -11,12 +11,6 @@ type FormData = {
 
   servicos: string[];
   fotos: File[];
-
-  proprietario: string;
-  email: string;
-  telefone: string;
-  password: string;
-  confirmarPassword: string;
 };
 
 type Props = {
@@ -53,19 +47,24 @@ export default function Step1Informacoes({ formData, setFormData }: Props) {
 
       <div>
         <label className="block mb-2 font-semibold">Categoria</label>
-
         <select
-          name="categoria"
           value={formData.categoria}
-          onChange={handleChange}
-          className="w-full border rounded-lg p-3 focus:ring-2 focus:ring-orange-600 outline-none"
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              categoria: e.target.value,
+            })
+          }
         >
-          <option value="">Selecione</option>
-          <option>Hotel</option>
-          <option>Resort</option>
-          <option>Pousada</option>
-          <option>Hospedaria</option>
-          <option>Apartamento</option>
+          <option value="">Selecione o tipo</option>
+
+          <option value="HOTEL">Hotel</option>
+
+          <option value="RESORT">Resort</option>
+
+          <option value="GUESTHOUSE">Guesthouse</option>
+
+          <option value="APARTAMENTO">Apartamento</option>
         </select>
       </div>
 

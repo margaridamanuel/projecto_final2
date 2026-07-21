@@ -4,12 +4,12 @@ import { API_URL } from "../Config/api";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
-import Hero from "../components/Hero";
+import HeroAlojamentos from "../components/HeroAlojamentos";
 
 export default function Alojamentos() {
   const navigate = useNavigate();
-  const irParaReservas = () => {
-    navigate("/reservas");
+  const irParaReservas = (id: number) => {
+    navigate(`/reserva/${id}`);
   };
 
   const [categoriaSelecionada, setCategoriaSelecionada] = useState("Todos");
@@ -23,18 +23,16 @@ export default function Alojamentos() {
 
   useEffect(() => {
     const carregarAlojamentos = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/alojamentos`);
+      const response = await axios.get(`${API_URL}/alojamentos`);
 
-        // Caso a API devolva { data: [...] }
-        setAlojamentos(response.data.data || response.data);
-      } catch (error) {
-        console.error("Erro ao carregar alojamentos:", error);
-      }
+      console.log("RESPOSTA DA API:", response.data);
+
+      setAlojamentos(response.data.data || response.data);
     };
 
     carregarAlojamentos();
   }, []);
+
   const alojamentosFiltrados = alojamentos.filter((item) => {
     const categoria =
       categoriaSelecionada === "Todos" || item.tipo === categoriaSelecionada;
@@ -73,13 +71,20 @@ export default function Alojamentos() {
     <>
       <Navbar />
 
-      <Hero onSearch={setFiltro} />
+      <HeroAlojamentos
+        onSearch={(texto) =>
+          setFiltro((prev) => ({
+            ...prev,
+            destino: texto,
+          }))
+        }
+      />
 
       {/* Pesquisa */}
-      <section className="py-12 bg-white">
+      <section className="max-w-7xl mx-auto px-6 py-8">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-8">
-            Escolha o seu alojamento
+          <h2 className="text-3xl font-bold mb-8 text-center">
+            Alojamentos Disponíveis
           </h2>
           <p className="text-gray-600 mb-6">
             {alojamentosFiltrados.length} alojamento(s) encontrado(s)
@@ -220,7 +225,7 @@ export default function Alojamentos() {
                     </span>
 
                     <button
-                      onClick={irParaReservas}
+                      onClick={() => irParaReservas(item.id)}
                       className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold transition"
                     >
                       Reservar

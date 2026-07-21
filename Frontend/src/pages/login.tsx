@@ -20,6 +20,8 @@ function Login({ onLogin }: { onLogin: (usuario: Usuario) => void }) {
       // guardar utilizador logado
       localStorage.setItem("utilizador", JSON.stringify(usuario));
 
+      console.log("Utilizador:", usuario);
+      console.log("Grupos:", usuario.groups);
       onLogin(usuario);
     } catch (error) {
       setErro(
