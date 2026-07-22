@@ -34,6 +34,21 @@ export default function Alojamentos() {
     }
   }
 
+  async function alterarStatus(id: number, status: string) {
+    try {
+      await axios.patch(
+        `http://localhost:3000/api/v1/alojamentos/${id}/status`,
+        {
+          status,
+        },
+      );
+
+      buscarAlojamentos();
+    } catch (error) {
+      console.error("Erro ao alterar status:", error);
+    }
+  }
+
   useEffect(() => {
     buscarAlojamentos();
   }, []);
@@ -77,6 +92,18 @@ export default function Alojamentos() {
               <span className="inline-block mt-3 px-3 py-1 rounded-full text-sm bg-yellow-100">
                 {alojamento.status}
               </span>
+              <span className="inline-block mt-3 px-3 py-1 rounded-full text-sm bg-yellow-100">
+                {alojamento.status}
+              </span>
+
+              {alojamento.status === "PENDENTE" && (
+                <button
+                  onClick={() => alterarStatus(alojamento.id, "APROVADO")}
+                  className="mt-4 bg-green-600 text-white px-4 py-2 rounded"
+                >
+                  Aprovar
+                </button>
+              )}
             </div>
           ))}
         </div>

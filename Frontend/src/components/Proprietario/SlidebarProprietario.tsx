@@ -4,7 +4,6 @@ const menu = [
   { nome: "Dashboard", rota: "/proprietario" },
   { nome: "Meus Alojamentos", rota: "/proprietario/alojamentos" },
   { nome: "Reservas", rota: "/proprietario/reservas" },
-  { nome: "Avaliações", rota: "/proprietario/avaliacoes" },
   { nome: "Perfil", rota: "/proprietario/perfil" },
 ];
 

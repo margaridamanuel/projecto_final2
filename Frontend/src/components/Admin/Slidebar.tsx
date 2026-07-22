@@ -5,8 +5,6 @@ const menu = [
   { nome: "Alojamentos", rota: "/admin/alojamentos" },
   { nome: "Reservas", rota: "/admin/reservas" },
   { nome: "Utilizadores", rota: "/admin/utilizadores" },
-  { nome: "Avaliações", rota: "/admin/avaliacoes" },
-  { nome: "Configurações", rota: "/admin/configuracoes" },
 ];
 export default function Sidebar() {
   const location = useLocation();

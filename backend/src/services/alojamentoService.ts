@@ -107,4 +107,25 @@ export class AlojamentosService {
       },
     });
   }
+
+  async atualizar(id: number, data: any) {
+    return await prisma.alojamento.update({
+      where: {
+        id,
+      },
+
+      data: {
+        nome: data.nome,
+        descricao: data.descricao,
+        tipo: data.tipo,
+        quartos: Number(data.quartos),
+        preco: Number(data.preco),
+        provincia: data.provincia,
+        municipio: data.municipio,
+        endereco: data.endereco,
+        servicos: data.servicos,
+        estrelas: Number(data.estrelas),
+      },
+    });
+  }
 }

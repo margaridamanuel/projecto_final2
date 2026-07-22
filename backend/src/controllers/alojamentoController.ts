@@ -102,4 +102,20 @@ export class AlojamentosController {
       });
     }
   }
+
+  async atualizar(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+
+      const alojamento = await this.service.atualizar(id, req.body);
+
+      return res.json(alojamento);
+    } catch (error) {
+      console.error(error);
+
+      return res.status(500).json({
+        mensagem: "Erro ao atualizar alojamento",
+      });
+    }
+  }
 }
