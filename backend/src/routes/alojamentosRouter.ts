@@ -30,4 +30,6 @@ router.patch(
 
 // LISTAR TODOS
 router.get("/alojamentos", controller.listar.bind(controller));
+
+router.put("/alojamentos/:id", controller.atualizar.bind(controller));
 export default router;

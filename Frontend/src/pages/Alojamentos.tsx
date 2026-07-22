@@ -111,62 +111,46 @@ export default function Alojamentos() {
 
       <section className="max-w-7xl mx-auto py-16 px-6">
         <h2 className="text-4xl font-bold mb-10">Alojamentos em Destaque</h2>
+
         <div className="grid grid-cols-3 grid-rows-2 gap-5 h-[650px]">
-          {/* Imagem grande */}
+          {alojamentos.slice(0, 3).map((item, index) => (
+            <div
+              key={item.id}
+              className={`relative rounded-3xl overflow-hidden group ${
+                index === 0 ? "col-span-2 row-span-2" : ""
+              }`}
+            >
+              <img
+                src={obterImagem(item.imagem)}
+                alt={item.nome}
+                className="w-full h-full object-cover"
+              />
 
-          <div className="col-span-2 row-span-2 relative rounded-3xl overflow-hidden group">
-            <img
-              src={obterImagem(alojamentos[0]?.imagem)}
-              alt={alojamentos[0]?.nome}
-              className="w-full h-full object-cover"
-            />
+              <div className="absolute inset-0 bg-black/40"></div>
 
-            <div className="absolute inset-0 bg-black/40"></div>
+              <div
+                className={`absolute text-white ${
+                  index === 0 ? "bottom-6 left-6" : "bottom-4 left-4"
+                }`}
+              >
+                {index === 0 && (
+                  <span className="bg-orange-500 px-3 py-1 rounded-full">
+                    {item.tipo}
+                  </span>
+                )}
 
-            <div className="absolute bottom-6 left-6 text-white">
-              <span className="bg-orange-500 px-3 py-1 rounded-full">
-                {alojamentos[0]?.tipo}
-              </span>
+                <h3
+                  className={`font-bold ${
+                    index === 0 ? "text-3xl mt-3" : "text-xl"
+                  }`}
+                >
+                  {item.nome}
+                </h3>
 
-              <h3 className="text-3xl font-bold mt-3">
-                {alojamentos[0]?.nome}
-              </h3>
-
-              <p>{alojamentos[0]?.provincia}</p>
+                {index === 0 && <p>{item.provincia}</p>}
+              </div>
             </div>
-          </div>
-
-          {/* Superior direita */}
-
-          <div className="relative rounded-3xl overflow-hidden group">
-            <img
-              src={obterImagem(alojamentos[1]?.imagem)}
-              alt={alojamentos[1]?.nome}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40"></div>
-
-            <div className="absolute bottom-4 left-4 text-white">
-              <h3 className="font-bold text-xl">{alojamentos[1]?.nome}</h3>
-            </div>
-          </div>
-
-          {/* Meio direita */}
-
-          <div className="relative rounded-3xl overflow-hidden group">
-            <img
-              src={obterImagem(alojamentos[2]?.imagem)}
-              alt={alojamentos[2]?.nome}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/40"></div>
-
-            <div className="absolute bottom-4 left-4 text-white">
-              <h3 className="font-bold text-xl">{alojamentos[2]?.nome}</h3>
-            </div>
-          </div>
-
-          {/* Inferior */}
+          ))}
         </div>
       </section>
 

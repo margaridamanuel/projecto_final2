@@ -71,12 +71,6 @@ function Login({ onLogin }: { onLogin: (usuario: Usuario) => void }) {
               Criar conta
             </Link>
           </p>
-          <p className="text-center mt-4">
-            Deseja cadastrar um alojamento?{" "}
-            <Link to="/cadastro-alojamento" className="text-orange-600 ">
-              Cadastrar Alojamento
-            </Link>
-          </p>
         </form>
       </div>
     </div>

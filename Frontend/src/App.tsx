@@ -25,7 +25,8 @@ import MeusAlojamentos from "./pages/Proprietario/MeusAlojamentos";
 import Reservas2 from "./pages/Proprietario/Reservas2";
 import AvaliacoesProprietario from "./pages/Proprietario/Avaliacoes";
 import PerfilProprietario from "./pages/Proprietario/Perfil";
-
+import Sobre from "./pages/sobre";
+import Reservas from "./pages/admin/Reservas";
 import ProtectedRoute from "./components/protectedRoute";
 import React from "react";
 
@@ -83,7 +84,16 @@ function App() {
         <Route path="/melhores-precos" element={<MelhoresPrecos />} />
         <Route path="/alojamentos/:id" element={<AlojamentoDetalhes />} />
         <Route path="/cadastro-alojamento" element={<CadastroAlojamento />} />
+        <Route path="/sobre" element={<Sobre />} />;
         <Route path="/reserva/:id" element={<Reserva />} />
+        <Route
+          path="/admin/reservas"
+          element={
+            <ProtectedRoute grupo="/admin">
+              <Reservas />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/proprietario/avaliacoes"
           element={<AvaliacoesProprietario />}
@@ -104,7 +114,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/utilizadores"
           element={
@@ -113,7 +122,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/admin/alojamentos/:id"
           element={
@@ -138,7 +146,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/proprietario/perfil"
           element={
@@ -147,7 +154,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/proprietario/reservas"
           element={
@@ -156,7 +162,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/proprietario/avaliacoes"
           element={

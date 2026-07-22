@@ -67,4 +67,18 @@ export class ReservaController {
       });
     }
   }
+
+  async dashboard(req: Request, res: Response) {
+    try {
+      const proprietarioId = Number(req.params.id);
+
+      const dados = await this.service.dashboard(proprietarioId);
+
+      return res.json(dados);
+    } catch (error) {
+      return res.status(500).json({
+        message: "Erro ao carregar dashboard",
+      });
+    }
+  }
 }

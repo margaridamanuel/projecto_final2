@@ -84,4 +84,53 @@ export class ReservaService {
       },
     });
   }
+
+  async dashboard(proprietarioId: number) {
+    const [alojamentos, reservasPendentes, reservasConfirmadas, receita] =
+      await Promise.all([
+        prisma.alojamento.count({
+          where: {
+            proprietarioId,
+          },
+        }),
+
+        prisma.reserva.count({
+          where: {
+            alojamento: {
+              proprietarioId,
+            },
+            status: "PENDENTE",
+          },
+        }),
+
+        prisma.reserva.count({
+          where: {
+            alojamento: {
+              proprietarioId,
+            },
+            status: "CONFIRMADA",
+          },
+        }),
+
+        prisma.reserva.aggregate({
+          where: {
+            alojamento: {
+              proprietarioId,
+            },
+            status: "CONFIRMADA",
+          },
+
+          _sum: {
+            total: true,
+          },
+        }),
+      ]);
+
+    return {
+      alojamentos,
+      reservasPendentes,
+      reservasConfirmadas,
+      receita: Number(receita._sum.total || 0),
+    };
+  }
 }

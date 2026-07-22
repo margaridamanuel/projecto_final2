@@ -120,10 +120,6 @@ export default function AlojamentoDetalhes() {
                 ⭐⭐⭐⭐⭐
                 <span className="font-semibold">{alojamento.estrelas}</span>
               </div>
-
-              <button className="w-full mt-8 bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-xl font-bold transition">
-                Reservar Agora
-              </button>
             </div>
           </div>
         </section>
