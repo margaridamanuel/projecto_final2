@@ -61,7 +61,6 @@ export default function MeusAlojamentos() {
               <th>Tipo</th>
               <th>Província</th>
               <th>Estado</th>
-              <th>Ações</th>
             </tr>
           </thead>
 
@@ -70,7 +69,12 @@ export default function MeusAlojamentos() {
               <tr key={alojamento.id} className="border-b">
                 <td className="p-2">
                   <img
-                    src={`${API_URL.replace("/api/v1", "")}/uploads/${alojamento.imagem}`}
+                    src={
+                      alojamento.imagem?.startsWith("http")
+                        ? alojamento.imagem
+                        : `${API_URL.replace("/api/v1", "")}/uploads/${alojamento.imagem}`
+                    }
+                    alt={alojamento.nome}
                     className="w-20 h-16 object-cover rounded"
                   />
                 </td>
@@ -83,18 +87,7 @@ export default function MeusAlojamentos() {
 
                 <td>{alojamento.status}</td>
 
-                <td className="space-x-2">
-                  <button className="bg-blue-600 text-white px-3 py-1 rounded">
-                    Editar
-                  </button>
-
-                  <button
-                    onClick={() => eliminar(alojamento.id)}
-                    className="bg-red-600 text-white px-3 py-1 rounded"
-                  >
-                    Eliminar
-                  </button>
-                </td>
+                <td className="space-x-2"></td>
               </tr>
             ))}
           </tbody>

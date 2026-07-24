@@ -10,7 +10,9 @@ export default function MinhasReservas() {
     try {
       const response = await axios.get(`${API_URL}/reservas`);
 
-      setReservas(response.data);
+      const reservas = response.data.data || response.data;
+
+      setReservas(reservas);
     } catch (error) {
       console.error("Erro ao carregar reservas", error);
     }

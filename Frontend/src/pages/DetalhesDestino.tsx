@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { getDestinos } from "../service/destinosServices";
 import { getAlojamentos } from "../service/alojamentosService";
-
+import { API_URL } from "../Config/api";
 interface Destino {
   id: number;
   nome: string;
@@ -23,7 +24,11 @@ interface Alojamento {
 }
 
 export default function DetalhesDestino() {
+  const navigate = useNavigate();
   const { id } = useParams();
+  const irParaReservas = (id: number) => {
+    navigate(`/reserva/${id}`);
+  };
 
   const [destino, setDestino] = useState<Destino | null>(null);
   const [alojamentos, setAlojamentos] = useState<Alojamento[]>([]);
@@ -67,6 +72,16 @@ export default function DetalhesDestino() {
   const alojamentosProximos = alojamentos.filter(
     (a) => a.provincia === destino?.provincia,
   );
+  const obterImagem = (imagem: string) => {
+    if (!imagem) return "";
+
+    if (imagem.startsWith("http")) {
+      return imagem;
+    }
+
+    return `${API_URL.replace("/api/v1", "")}/uploads/${imagem}`;
+  };
+
   return (
     <>
       <Navbar />
@@ -136,7 +151,7 @@ export default function DetalhesDestino() {
                   className="rounded-2xl shadow-lg overflow-hidden bg-white"
                 >
                   <img
-                    src={hotel.imagem}
+                    src={obterImagem(hotel.imagem)}
                     alt={hotel.nome}
                     className="w-full h-48 object-cover"
                   />
@@ -148,7 +163,10 @@ export default function DetalhesDestino() {
 
                     <p className="mt-2">{hotel.descricao}</p>
 
-                    <button className="mt-4 bg-orange-600 text-white px-5 py-2 rounded-lg">
+                    <button
+                      onClick={() => irParaReservas(hotel.id)}
+                      className="mt-4 bg-orange-600 text-white px-5 py-2 rounded-lg"
+                    >
                       Reservar
                     </button>
                   </div>
