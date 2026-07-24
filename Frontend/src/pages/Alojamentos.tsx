@@ -1,14 +1,30 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../Config/api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/NavBar";
 import Footer from "../components/Footer";
+import { authService } from "../service/authService";
 import HeroAlojamentos from "../components/HeroAlojamentos";
 
 export default function Alojamentos() {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const redirect = location.state?.redirect || "/";
   const irParaReservas = (id: number) => {
+    if (!authService.isAuthenticated()) {
+      alert("Precisa de iniciar sessão para efetuar uma reserva.");
+
+      navigate("/login", {
+        state: {
+          redirect: `/reserva/${id}`,
+        },
+      });
+
+      return;
+    }
+
     navigate(`/reserva/${id}`);
   };
 

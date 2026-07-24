@@ -17,7 +17,16 @@ export default function NavBar() {
 
     window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    function atualizarUtilizador() {
+      setUtilizador(localStorage.getItem("utilizador"));
+    }
+
+    window.addEventListener("logout", atualizarUtilizador);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("logout", atualizarUtilizador);
+    };
   }, []);
 
   const logout = () => {

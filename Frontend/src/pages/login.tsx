@@ -1,5 +1,5 @@
 import NavBar from "../components/NavBar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authService, Usuario } from "../service/authService";
 import React from "react";
 
@@ -8,6 +8,7 @@ function Login({ onLogin }: { onLogin: (usuario: Usuario) => void }) {
   const [password, setPassword] = React.useState("");
   const [erro, setErro] = React.useState("");
   const [carregando, setCarregando] = React.useState(false);
+  const navigate = useNavigate();
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -15,14 +16,18 @@ function Login({ onLogin }: { onLogin: (usuario: Usuario) => void }) {
     setCarregando(true);
 
     try {
-      const usuario = await authService.login({ username, password });
+      const usuario = await authService.login({
+        username,
+        password,
+      });
 
       // guardar utilizador logado
       localStorage.setItem("utilizador", JSON.stringify(usuario));
 
-      console.log("Utilizador:", usuario);
-      console.log("Grupos:", usuario.groups);
       onLogin(usuario);
+
+      // Redireciona para a página inicial
+      navigate("/");
     } catch (error) {
       setErro(
         error instanceof Error ? error.message : "Não foi possível fazer login",

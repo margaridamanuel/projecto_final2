@@ -2,23 +2,28 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../Config/api";
+import { useNavigate } from "react-router-dom";
+import { authService } from "../service/authService";
 
 export default function Reserva() {
   // dados recebidos da página de alojamentos
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const [alojamento, setAlojamento] = useState<any>(null);
 
   useEffect(() => {
+    // Verifica se o utilizador está autenticado
+    if (!authService.isAuthenticated()) {
+      alert("Para fazer uma reserva é necessário iniciar sessão.");
+
+      navigate("/login");
+
+      return;
+    }
+
     async function carregarAlojamento() {
       try {
-        console.log("ID recebido:", id);
-
         const response = await axios.get(`${API_URL}/alojamentos/${id}`);
-
-        console.log("Resposta completa:", response);
-
-        console.log("Dados recebidos:", response.data);
 
         setAlojamento(response.data.data ?? response.data);
       } catch (error) {
@@ -29,11 +34,13 @@ export default function Reserva() {
     if (id) {
       carregarAlojamento();
     }
-  }, [id]);
+  }, [id, navigate]);
+  const usuario = authService.getSession();
+
   const [form, setForm] = useState({
-    nome: "",
+    nome: usuario?.name || "",
     apelido: "",
-    email: "",
+    email: usuario?.email || "",
     morada: "",
     cidade: "",
     telefone: "",

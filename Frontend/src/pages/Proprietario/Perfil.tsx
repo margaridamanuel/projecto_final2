@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import ProprietarioLayout from "../../components/Proprietario/ProprietarioLayout";
 import { authService } from "../../service/authService";
+import { useNavigate } from "react-router-dom";
 
 export default function PerfilProprietario() {
   const [usuario, setUsuario] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const user = authService.getSession();
@@ -12,7 +14,15 @@ export default function PerfilProprietario() {
       setUsuario(user);
     }
   }, []);
+  function sair() {
+    const confirmar = window.confirm("Deseja terminar a sessão?");
 
+    if (!confirmar) return;
+
+    authService.logout();
+
+    navigate("/login");
+  }
   if (!usuario) {
     return (
       <ProprietarioLayout>
@@ -65,8 +75,11 @@ export default function PerfilProprietario() {
             </div>
           </div>
 
-          <button className="mt-8 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg">
-            Editar Perfil
+          <button
+            onClick={sair}
+            className="mt-8 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg"
+          >
+            Sair
           </button>
         </div>
       </div>

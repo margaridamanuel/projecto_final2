@@ -131,5 +131,18 @@ export const authService = {
     sessionStorage.removeItem(ACCESS_TOKEN_KEY);
     sessionStorage.removeItem(REFRESH_TOKEN_KEY);
     sessionStorage.removeItem(USER_KEY);
+
+    localStorage.removeItem("utilizador");
+    localStorage.removeItem("token");
+
+    window.dispatchEvent(new Event("logout"));
+  },
+
+  isAuthenticated() {
+    return this.getSession() !== null;
+  },
+
+  getToken() {
+    return sessionStorage.getItem(ACCESS_TOKEN_KEY);
   },
 };
